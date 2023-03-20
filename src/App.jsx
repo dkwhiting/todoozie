@@ -1,19 +1,29 @@
 import './App.css'
-import { useSelector, useDispatch } from 'react-redux'
-import { addTodo, deleteTodo } from './features/Todos/todoSlice'
+import NavBar from './features/NavBar'
+import { Routes, Route } from 'react-router-dom'
+import {
+  Dashboard,
+  Todos,
+  Projects,
+  Messages,
+  Settings
+} from './features'
 
 function App() {
-  const todos = useSelector((state) => state.todos.todos)
+
 
   return (
-    <div className="App">
-      {todos.map(todo => {
-        return (
-          <div key={todo.id}>
-            {todo.name}
-          </div>
-        )
-      })}
+    <div className="flex h-full">
+      <NavBar />
+      <div className="flex flex-col">
+        <Routes>
+          <Route path="dashboard" element={<Dashboard />} />
+          <Route path="tasks" element={<Todos />} />
+          <Route path="projects" element={<Projects />} />
+          <Route path="messages" element={<Messages />} />
+          <Route path="settings" element={<Settings />} />
+        </Routes>
+      </div>
     </div>
   )
 }
