@@ -8,7 +8,9 @@ const initialState = {
       description: 'first todo',
       priority: 'low',
       category: 'work',
-      due: 'today'
+      status: 'To do',
+      dueDate: 'today',
+      projectId: 1
     },
     {
       id: 2,
@@ -16,7 +18,9 @@ const initialState = {
       description: 'second todo',
       priority: 'medium',
       category: 'personal',
-      due: 'today'
+      status: 'Completed',
+      dueDate: 'today',
+      projectId: 1
     },
     {
       id: 3,
@@ -24,10 +28,12 @@ const initialState = {
       description: 'third todo',
       priority: 'high',
       category: 'other',
-      due: '3/20/23'
+      status: 'In progress',
+      dueDate: '3/20/23',
+      projectId: 0
     },
   ],
-  counter: 5,
+  todoCounter: 5,
 }
 
 
@@ -36,7 +42,7 @@ export const todoSlice = createSlice({
   initialState,
   reducers: {
     addTodo: ((state, action) => {
-      ++state.counter
+      ++state.todoCounter
       console.log(action.payload, 'this is payload')
       state.todos.push(action.payload)
       console.log(state.todos)

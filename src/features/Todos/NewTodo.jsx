@@ -16,6 +16,11 @@ const categoryOptions = [
   { value: "other", label: "Other" },
 ];
 
+const projectOptions = [
+  { id: 0, title: "None" },
+  { id: 1, title: "Create ToDo App" },
+]
+
 const NewTodo = () => {
   const dispatch = useDispatch()
   const counter = useSelector((state) => state.todos.counter)
@@ -24,13 +29,9 @@ const NewTodo = () => {
   const [description, setDescription] = useState("");
   const [priority, setPriority] = useState(priorityOptions[0].value);
   const [category, setCategory] = useState(categoryOptions[0].value);
+  const [project, setProject] = useState(projectOptions[0].title);
+  const [dueDate, setDueDate] = useState(null)
   const cancelButtonRef = useRef(null)
-
-  const trimInput = (input) => {
-    const trimmed = input.trim()
-    console.log(trimmed)
-    return trimmed
-  }
 
 
   const handleSubmit = (e) => {
@@ -41,7 +42,8 @@ const NewTodo = () => {
       description: description,
       priority: priority,
       category: category,
-      due: dueDate = ''
+      dueDate: dueDate,
+      status: 'To do'
     }))
     setOpen(false)
     setTitle("");
@@ -158,6 +160,32 @@ const NewTodo = () => {
                                 ))}
                               </select>
                             </div>
+                            <div className="mb-4 w-full">
+                              <label
+                                htmlFor="project"
+                                className="block text-gray-700 font-bold mb-2"
+                              >
+                                Project
+                              </label>
+                              <select
+                                id="project"
+                                value={project}
+                                onChange={(e) => setProject(e.target.value)}
+                                className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+                                required
+                              >
+                                {projectOptions.map((option) => (
+                                  <option key={option.id} value={option.title}>
+                                    {option.title}
+                                  </option>
+                                ))}
+                              </select>
+                            </div>
+                            <input
+                              type="date"
+                              value={dueDate}
+                              onChange={(e) => setDueDate(e.target.value)}>
+                            </input>
                           </div>
                         </form>
                       </div>

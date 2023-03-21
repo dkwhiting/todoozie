@@ -37,6 +37,7 @@ const Todos = () => {
                         <div className="flex gap-20">
                           <div className="flex flex-col">{todo.title}</div>
                           <div className="flex flex-col">{todo.description}</div>
+                          <div className="flex flex-col">{todo.status}</div>
                         </div>
 
                       )

@@ -1,6 +1,6 @@
 import Dashboard from "./Dashboard";
 import Todos from "./Todos/Todos";
-import Projects from "./Projects";
+import Projects from "./Projects/Projects";
 import Messages from "./Messages";
 import NavBar from "./NavBar";
 import Settings from "./Settings";
