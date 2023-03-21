@@ -16,20 +16,22 @@ const categoryOptions = [
   { value: "other", label: "Other" },
 ];
 
-const projectOptions = [
-  { id: 0, title: "None" },
-  { id: 1, title: "Create ToDo App" },
-]
 
 const NewTodo = () => {
+  const projects = useSelector((state) => state.projects.projects)
+  const projectOptions = [
+    { id: 0, title: "None" },
+    ...projects
+  ]
+  const counter = useSelector((state) => state.todos.todoCounter)
+
   const dispatch = useDispatch()
-  const counter = useSelector((state) => state.todos.counter)
   const [open, setOpen] = useState(false)
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [priority, setPriority] = useState(priorityOptions[0].value);
   const [category, setCategory] = useState(categoryOptions[0].value);
-  const [project, setProject] = useState(projectOptions[0].title);
+  const [projectId, setProjectId] = useState(projectOptions[0].title);
   const [dueDate, setDueDate] = useState(null)
   const cancelButtonRef = useRef(null)
 
@@ -43,7 +45,8 @@ const NewTodo = () => {
       priority: priority,
       category: category,
       dueDate: dueDate,
-      status: 'To do'
+      status: 'To do',
+      projectId: projectId
     }))
     setOpen(false)
     setTitle("");
@@ -169,13 +172,13 @@ const NewTodo = () => {
                               </label>
                               <select
                                 id="project"
-                                value={project}
-                                onChange={(e) => setProject(e.target.value)}
+                                value={projectId}
+                                onChange={(e) => setProjectId(e.target.value)}
                                 className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                                 required
                               >
                                 {projectOptions.map((option) => (
-                                  <option key={option.id} value={option.title}>
+                                  <option key={option.id} value={option.id}>
                                     {option.title}
                                   </option>
                                 ))}

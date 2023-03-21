@@ -2,7 +2,14 @@ import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
   projects: [
-
+    {
+      id: 1,
+      title: 'Create ToDo App'
+    },
+    {
+      id: 2,
+      title: 'Create Score Keeper App'
+    },
   ],
   projectCounter: 5,
 }
