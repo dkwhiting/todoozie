@@ -18,6 +18,19 @@ const createUser = async ({ email, password }) => {
   }
 }
 
+const getUserByEmail = async ({ email, password }) => {
+  try {
+    const { rows: [user] } = await client.query(`
+    SELECT * FROM users
+    WHERE email = $1
+    `, [email])
+    return user
+  } catch (error) {
+    console.error(error)
+  }
+}
+
 module.exports = {
-  createUser
+  createUser,
+  getUserByEmail
 }

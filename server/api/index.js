@@ -1,15 +1,6 @@
 const { client } = require('../db');
 const router = require('express').Router();
 
-router.use('/', async (req, res, next) => {
-  try {
-
-  } catch (error) {
-    next(error)
-  }
-})
-
-
 router.get('/health', async (req, res, next) => {
   try {
     const uptime = process.uptime();
