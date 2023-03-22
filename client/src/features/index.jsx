@@ -5,6 +5,7 @@ import Messages from "./Messages";
 import NavBar from "./NavBar/NavBar";
 import Settings from "./Settings";
 import NewTodo from "./Todos/NewTodo";
+import Login from "./Login";
 
 export {
   Dashboard,
@@ -14,4 +15,5 @@ export {
   NavBar,
   Settings,
   NewTodo,
+  Login
 }

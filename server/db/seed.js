@@ -7,6 +7,8 @@ const dropTables = async () => {
   try {
     console.log('Dropping tables')
     await client.query(`
+    DROP TABLE IF EXISTS tasks;
+    DROP TABLE IF EXISTS projects;
     DROP TABLE IF EXISTS users;
     `)
     console.log('Finished dropping tables')
@@ -21,10 +23,29 @@ const createTables = async () => {
     await client.query(`
     CREATE TABLE users (
       id SERIAL PRIMARY KEY,
-      email VARCHAR UNIQUE NOT NULL,
-      password VARCHAR NOT NULL
-    )
+      email VARCHAR(50) UNIQUE NOT NULL,
+      password VARCHAR(255) NOT NULL
+    );
+    CREATE TABLE projects (
+      id SERIAL PRIMARY KEY,
+      name VARCHAR(100) NOT NULL,
+      description TEXT,
+      user_id INT NOT NULL,
+      FOREIGN KEY (user_id) REFERENCES users(id)
+    );
+    CREATE TABLE tasks (
+      id SERIAL PRIMARY KEY,
+      name VARCHAR(100) NOT NULL,
+      description TEXT,
+      due_date TIMESTAMP,
+      project_id INT NOT NULL,
+      user_id INT NOT NULL,
+      status VARCHAR(20) NOT NULL DEFAULT 'todo',
+      FOREIGN KEY (project_id) REFERENCES projects(id),
+      FOREIGN KEY (user_id) REFERENCES users(id)
+      );
     `)
+
     console.log('Finished building tables')
   } catch (error) {
     console.error('Error building tables', error)
@@ -34,7 +55,7 @@ const createTables = async () => {
 const createInitialUsers = async () => {
   try {
     console.log('Creating initial users')
-    await createUser({ email: 'fakeemail@fakeemail.com', password: 'password' })
+    await createUser({ email: 'jobin@fake.com', password: 'password' })
     console.log('Finished creating initial users')
   } catch (error) {
     console.error('Error creating initial users', error)
