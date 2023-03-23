@@ -9,24 +9,6 @@ const Todos = () => {
   const [dates, setDates] = useState([])
   const [view, setView] = useState('project')
 
-  useEffect(() => {
-    const getDates = () => {
-      const newDates = []
-      todos.forEach(todo => {
-        const month = todo.dueDate.slice(5, 2)
-        const year = todo.dueDate.slice(0, 4)
-        console.log(month)
-        if (!newDates.includes(todo.dueDate))
-          newDates.push(todo.dueDate)
-      })
-      setDates(newDates)
-    }
-    getDates()
-    console.log(dates)
-  }, [todos])
-
-
-
   return (
     <div className="flex flex-col">
       <div className="flex">
@@ -35,42 +17,16 @@ const Todos = () => {
       </div>
 
       <div className="flex flex-col">
-        {view === 'date'
-          ? dates.map(date => {
-            return (
-              <div className="flex flex-col">
-                {date}
-                <div className="flex flex-col pl-5">
-                  {
-                    todos.filter(todo => todo.dueDate === date).map(todo => {
-                      return (
 
-                        <SingleTodo todo={todo} />
-                      )
-                    })
-                  }
-                </div>
-              </div>
-            )
-          })
-          : projects.map(project => {
-            return (
-              <div className="flex flex-col">
-                {project.title}
-                <div className="flex flex-col pl-5">
-                  {
-                    todos.filter(todo => todo.projectId === project.id).map(todo => {
-                      return (
-
-                        <SingleTodo todo={todo} />
-                      )
-                    })
-                  }
-                </div>
-              </div>
-            )
-          })
+        {todos?.map((todo, index) => {
+          return (
+            <div key={index} className="flex gap-20">
+              <SingleTodo todo={todo} index={index} />
+            </div>
+          )
+        })
         }
+
       </div>
       <NewTodo />
     </div>

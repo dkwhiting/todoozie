@@ -4,10 +4,10 @@ import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword
 } from "firebase/auth";
+import { writeUserData } from "../../db";
 
 const initialState = {
-  currentUser: null,
-  authToken: null
+  currentUser: null
 }
 
 
@@ -22,13 +22,8 @@ export const userSlice = createSlice({
           // Signed in 
           const user = userCredential.user;
           state.currentUser = {
-            uid: userCredential.user.uid,
-            email: userCredential.user.email,
+            uid: userCredential.user.uid
           }
-          state.authToken = userCredential.user.accessToken
-          localStorage.setItem('authToken', userCredential.user.accessToken)
-          localStorage.setItem('currentUser', JSON.stringify({ email: state.currentUser.email, uid: state.currentUser.uid }))
-          console.log(state.authToken)
         })
         .catch((error) => {
           const errorCode = error.code;
@@ -37,7 +32,8 @@ export const userSlice = createSlice({
         });
     },
     logout: (state) => {
-      state.user = null;
+      state.currentUser = null;
+
     },
     register: async (state, action) => {
       const { email, password } = action.payload
@@ -45,9 +41,9 @@ export const userSlice = createSlice({
         .then((userCredential) => {
           // Signed in 
           const user = userCredential.user;
-          state.user = {
-            uid: userCredential.user.uid,
-            email: userCredential.user.email,
+          writeUserData(userCredential.user.uid, userCredential.user.email)
+          state.currentUser = {
+            uid: userCredential.user.uid
           }
         })
         .catch((error) => {
@@ -55,10 +51,10 @@ export const userSlice = createSlice({
           const errorMessage = error.message;
           console.error(error)
         });
-    }
+    },
   }
 })
 
-export const { login, logout, register } = userSlice.actions
+export const { login, logout, register, setUser } = userSlice.actions
 
 export default userSlice.reducer

@@ -35,7 +35,7 @@ const NavBar = () => {
           ? <NavLink className={({ isActive }) =>
             isActive ? "bg-white px-3 text-black rounded-l-lg" : 'hover:bg-slate-400 rounded-l-lg'} to="login">Login</NavLink>
           : <NavLink className={({ isActive }) =>
-            isActive ? "bg-white px-3 text-black rounded-l-lg" : 'hover:bg-slate-400 rounded-l-lg'} to="account">Account</NavLink>
+            isActive ? "bg-white px-3 text-black rounded-l-lg" : 'hover:bg-slate-400 rounded-l-lg'} to="account">Log Out</NavLink>
       }
     </div>
   )

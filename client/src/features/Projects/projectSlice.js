@@ -25,10 +25,13 @@ export const projectSlice = createSlice({
     }),
     deleteProject: ((state, action) => {
       state.projects.filter(project => project.id !== action.payload.id)
+    }),
+    initializeProjects: ((state, action) => {
+      state.todos = action.payload
     })
   }
 })
 
-export const { Project, deleteProject } = projectSlice.actions
+export const { Project, deleteProject, initializeProjects } = projectSlice.actions
 
 export default projectSlice.reducer

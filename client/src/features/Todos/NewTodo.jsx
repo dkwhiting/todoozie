@@ -1,8 +1,12 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { addTodo } from './todoSlice';
+import { initializeTodos, newTodo } from './todoSlice';
 import { Fragment, useRef, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
+import { getDatabase, ref, push, set, child, get } from "firebase/database";
+import { auth } from '../../firebase';
+import { addTodoToDB } from '../../../db';
+
 
 const priorityOptions = [
   { value: "low", label: "Low" },
@@ -23,7 +27,6 @@ const NewTodo = () => {
     { id: 0, title: "None" },
     ...projects
   ]
-  const counter = useSelector((state) => state.todos.todoCounter)
 
   const dispatch = useDispatch()
   const [open, setOpen] = useState(false)
@@ -31,15 +34,14 @@ const NewTodo = () => {
   const [description, setDescription] = useState("");
   const [priority, setPriority] = useState(priorityOptions[0].value);
   const [category, setCategory] = useState(categoryOptions[0].value);
-  const [projectId, setProjectId] = useState(projectOptions[0].title);
-  const [dueDate, setDueDate] = useState(null)
+  const [projectId, setProjectId] = useState(projectOptions[0].id);
+  const [dueDate, setDueDate] = useState('')
   const cancelButtonRef = useRef(null)
 
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    dispatch(addTodo({
-      id: counter,
+    const body = {
       title: title,
       description: description,
       priority: priority,
@@ -47,12 +49,18 @@ const NewTodo = () => {
       dueDate: dueDate,
       status: 'To do',
       projectId: projectId
-    }))
+    }
+    if (auth.currentUser) {
+      addTodoToDB(auth.currentUser.uid, body)
+    }
+    dispatch(newTodo(body))
     setOpen(false)
     setTitle("");
     setDescription("");
     setPriority(priorityOptions[0].value);
     setCategory(categoryOptions[0].value);
+    setProjectId(projectOptions[0].id)
+    setDueDate('')
   };
 
   return (
