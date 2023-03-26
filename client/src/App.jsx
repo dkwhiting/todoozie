@@ -16,12 +16,15 @@ import {
 } from './features'
 import { setUser } from './features/userSlice'
 import { initializeTodos } from './features/Todos/todoSlice'
+import { initializeProjects } from './features/Projects/projectSlice'
+import useGetDates from './useGetDates'
 
 function App() {
   const dispatch = useDispatch()
   const currentUser = useSelector((state) => state.user.currentUser)
   const authToken = useSelector((state) => state.user.authToken)
   const todos = useSelector((state) => state.todos.todos)
+
 
   useEffect(() => {
     onAuthStateChanged(auth, (user) => {
@@ -40,23 +43,20 @@ function App() {
         }).catch((error) => {
           console.error(error);
         });
+
         // Fetch projects from db
         get(child(dbRef, `projects/${user.uid}`)).then((snapshot) => {
           if (snapshot.exists()) {
             const newProjects = []
             Object.entries(snapshot.val()).map(project => {
               project[1].id = project[0]
-              newTodos.push(project[1])
+              newProjects.push(project[1])
             })
-            dispatch(initializeTodos(newTodos))
+            dispatch(initializeProjects(newProjects))
           }
-
         }).catch((error) => {
           console.error(error);
         });
-
-
-        console.log(todos)
       } else {
         console.log('You are not logged in')
       }
@@ -69,7 +69,7 @@ function App() {
   return (
     <div className="flex h-full">
       <NavBar />
-      <div className="flex flex-col">
+      <div className="flex flex-col w-full">
         <Routes>
           <Route path="dashboard" element={<Dashboard />} />
           <Route path="tasks" element={<Todos />} />

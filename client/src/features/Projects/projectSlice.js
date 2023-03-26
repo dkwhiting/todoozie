@@ -1,26 +1,15 @@
 import { createSlice } from "@reduxjs/toolkit";
 
 const initialState = {
-  projects: [
-    {
-      id: 1,
-      title: 'Create ToDo App'
-    },
-    {
-      id: 2,
-      title: 'Create Score Keeper App'
-    },
-  ],
-  projectCounter: 5,
-}
+  projects: [],
 
+}
 
 export const projectSlice = createSlice({
   name: 'projects',
   initialState,
   reducers: {
     addProject: ((state, action) => {
-      ++state.projectCounter
       state.projects.push(action.payload)
     }),
     deleteProject: ((state, action) => {
@@ -32,6 +21,6 @@ export const projectSlice = createSlice({
   }
 })
 
-export const { Project, deleteProject, initializeProjects } = projectSlice.actions
+export const { addProject, deleteProject, initializeProjects } = projectSlice.actions
 
 export default projectSlice.reducer

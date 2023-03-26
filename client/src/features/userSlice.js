@@ -12,7 +12,7 @@ const initialState = {
 
 
 export const userSlice = createSlice({
-  name: 'projects',
+  name: 'user',
   initialState,
   reducers: {
     login: async (state, action) => {

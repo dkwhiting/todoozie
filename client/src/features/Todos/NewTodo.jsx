@@ -38,6 +38,11 @@ const NewTodo = () => {
   const [dueDate, setDueDate] = useState('')
   const cancelButtonRef = useRef(null)
 
+  const formatDueDate = (date) => {
+    const splitDate = date.split('-')
+    const formattedDate = `${splitDate[1]}/${splitDate[2]}/${splitDate[0]}`
+    return formattedDate
+  }
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -46,7 +51,7 @@ const NewTodo = () => {
       description: description,
       priority: priority,
       category: category,
-      dueDate: dueDate,
+      dueDate: formatDueDate(dueDate),
       status: 'To do',
       projectId: projectId
     }
@@ -194,6 +199,7 @@ const NewTodo = () => {
                             </div>
                             <input
                               type="date"
+                              format="mm/dd/yyyy"
                               value={dueDate}
                               onChange={(e) => setDueDate(e.target.value)}>
                             </input>

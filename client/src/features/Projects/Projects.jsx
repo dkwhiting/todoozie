@@ -1,5 +1,6 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
+import NewProject from './NewProject'
 import SingleProject from './SingleProject'
 
 const Projects = () => {
@@ -17,6 +18,7 @@ const Projects = () => {
           })
         }
       </div>
+      <NewProject />
     </div>
   )
 }
