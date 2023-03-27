@@ -23,10 +23,10 @@ const Dashboard = () => {
             .filter(task => task.dueDate == today)
             .map(task => {
               return (
-                <div key={task.id} className="flex gap-5 hover:shadow p-1 rounded cursor-pointer">
-                  <span>{task.title}</span>
+                <div key={task.id} className="flex gap-5 hover:shadow p-1 rounded items-center">
+                  <div className="w-4 h-4 border-solid border border-black rounded hover:cursor-pointer" />
+                  <span className="min-w-1/2">{task.title}</span>
                   <span className="text-slate-400">{task.description}</span>
-                  <span className="text-slate-400">{task.dueDate}</span>
                 </div>
               )
             })}
