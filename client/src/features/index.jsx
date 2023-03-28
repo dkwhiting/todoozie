@@ -1,4 +1,4 @@
-import Dashboard from "./Dashboard";
+import Dashboard from "./Dashboard/Dashboard";
 import Todos from "./Todos/Todos";
 import Projects from "./Projects/Projects";
 import Messages from "./Messages";

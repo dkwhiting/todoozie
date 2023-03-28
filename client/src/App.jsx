@@ -18,6 +18,7 @@ import { setUser } from './features/userSlice'
 import { initializeTodos } from './features/Todos/todoSlice'
 import { initializeProjects } from './features/Projects/projectSlice'
 import useGetDates from './useGetDates'
+import Header from './features/Header'
 
 function App() {
   const dispatch = useDispatch()
@@ -52,6 +53,8 @@ function App() {
               project[1].id = project[0]
               newProjects.push(project[1])
             })
+            console.log('this is projects', newProjects)
+
             dispatch(initializeProjects(newProjects))
           }
         }).catch((error) => {
@@ -67,17 +70,20 @@ function App() {
 
 
   return (
-    <div className="flex h-full">
-      <NavBar />
-      <div className="flex flex-col w-full">
-        <Routes>
-          <Route path="dashboard" element={<Dashboard />} />
-          <Route path="tasks" element={<Todos />} />
-          <Route path="projects" element={<Projects />} />
-          <Route path="messages" element={<Messages />} />
-          <Route path="settings" element={<Settings />} />
-          <Route path="login" element={<Login />} />
-        </Routes>
+    <div className="flex flex-col h-full">
+      <Header />
+      <div className="flex h-full">
+        <NavBar />
+        <div className="flex flex-col w-full">
+          <Routes>
+            <Route path="dashboard" element={<Dashboard />} />
+            <Route path="tasks" element={<Todos />} />
+            <Route path="projects" element={<Projects />} />
+            <Route path="messages" element={<Messages />} />
+            <Route path="settings" element={<Settings />} />
+            <Route path="login" element={<Login />} />
+          </Routes>
+        </div>
       </div>
     </div>
   )

@@ -16,7 +16,8 @@ export const projectSlice = createSlice({
       state.projects.filter(project => project.id !== action.payload.id)
     }),
     initializeProjects: ((state, action) => {
-      state.todos = action.payload
+      state.projects = action.payload
+      console.log(state.projects)
     })
   }
 })

@@ -1,18 +1,10 @@
 import { createSlice } from "@reduxjs/toolkit";
-import { getDatabase, ref, push, set } from "firebase/database";
-import { auth } from "../../firebase";
-
 
 const initialState = {
-  todos: []
+  todos: [],
+  today: null,
+  tomorrow: null
 }
-
-
-
-
-
-
-
 
 export const todoSlice = createSlice({
   name: 'todos',
@@ -26,10 +18,17 @@ export const todoSlice = createSlice({
     }),
     initializeTodos: ((state, action) => {
       state.todos = action.payload
-    })
+    }),
+    toggleTaskStatus: ((state, action) => {
+      const currentTask = [...state.todos.filter(todo => todo.id === action.payload)]
+      console.log(currentTask)
+      // currentTask.status = 'Complete'
+      // console.log(action.payload)
+      // state.todos = [...state.todos.filter(todo => todo.id !== action.payload.id), currentTask]
+    }),
   }
 })
 
-export const { newTodo, deleteTodo, initializeTodos } = todoSlice.actions
+export const { newTodo, deleteTodo, initializeTodos, toggleTaskStatus } = todoSlice.actions
 
 export default todoSlice.reducer
