@@ -15,7 +15,7 @@ const RecentProjects = () => {
       </div>
       <div className="w-full flex flex-wrap gap-5 p-5">
         {
-          projects.map(project => {
+          projects.slice(0, 4).map(project => {
             return (
               <ProjectCardSmall project={project} />
             )
