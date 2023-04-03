@@ -2,21 +2,27 @@ import React from 'react'
 import { useDispatch } from 'react-redux';
 import { Fragment, useRef, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
-import { login, logout, register } from './userSlice'
 import { auth } from '../firebase'
-import {
-  getAuth,
-  createUserWithEmailAndPassword
-} from "firebase/auth";
+import { } from "firebase/auth";
+import { loginUser } from '../../db';
+import { useLoginUserMutation } from '../store/shopApi';
+import { setUser } from '../store/authSlice';
 
 const Login = () => {
   const emailRef = useRef()
   const passwordRef = useRef()
   const dispatch = useDispatch()
+  const [loginUser] = useLoginUserMutation()
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    dispatch(login({ email: emailRef.current.value, password: passwordRef.current.value }))
+    const body = {
+      email: emailRef.current.value,
+      password: passwordRef.current.value
+    }
+    const { data: response } = await loginUser(body)
+    // dispatch(setUser({ uid: response.uid }))
+    console.log(response)
   }
 
   return (

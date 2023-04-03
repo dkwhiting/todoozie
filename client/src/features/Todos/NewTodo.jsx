@@ -1,6 +1,6 @@
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { initializeTodos, newTodo } from './todoSlice';
+import { initializeTodos, newTodo } from '../../store/todoSlice';
 import { Fragment, useRef, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { getDatabase, ref, push, set, child, get } from "firebase/database";

@@ -3,9 +3,6 @@ import NavBar from './features/NavBar/NavBar'
 import { Routes, Route } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect } from 'react'
-import { auth } from './firebase';
-import { onAuthStateChanged, getAuth } from 'firebase/auth'
-import { getDatabase, ref, child, get } from "firebase/database";
 import {
   Dashboard,
   Todos,
@@ -14,57 +11,20 @@ import {
   Settings,
   Login
 } from './features'
-import { setUser } from './features/userSlice'
-import { initializeTodos } from './features/Todos/todoSlice'
-import { initializeProjects } from './features/Projects/projectSlice'
-import useGetDates from './useGetDates'
+const auth = getAuth()
 import Header from './features/Header'
+import { getAuth } from 'firebase/auth'
+import { useGetProjectsQuery } from './store/shopApi'
+
 
 function App() {
   const dispatch = useDispatch()
-  const currentUser = useSelector((state) => state.user.currentUser)
-  const authToken = useSelector((state) => state.user.authToken)
-  const todos = useSelector((state) => state.todos.todos)
-
+  // const { data, isFetching, isLoading } = useGetProjectsQuery(auth.currentUser?.uid)
 
   useEffect(() => {
-    onAuthStateChanged(auth, (user) => {
-      if (user) {
-        // Fetch tasks from db
-        const dbRef = ref(getDatabase());
-        get(child(dbRef, `tasks/${user.uid}`)).then((snapshot) => {
-          if (snapshot.exists()) {
-            const newTodos = []
-            Object.entries(snapshot.val()).map(todo => {
-              todo[1].id = todo[0]
-              newTodos.push(todo[1])
-            })
-            dispatch(initializeTodos(newTodos))
-          }
-        }).catch((error) => {
-          console.error(error);
-        });
 
-        // Fetch projects from db
-        get(child(dbRef, `projects/${user.uid}`)).then((snapshot) => {
-          if (snapshot.exists()) {
-            const newProjects = []
-            Object.entries(snapshot.val()).map(project => {
-              project[1].id = project[0]
-              newProjects.push(project[1])
-            })
-            console.log('this is projects', newProjects)
-
-            dispatch(initializeProjects(newProjects))
-          }
-        }).catch((error) => {
-          console.error(error);
-        });
-      } else {
-        console.log('You are not logged in')
-      }
-    });
-    //update tasks
+    // console.log('this is user', auth.currentUser?.uid)
+    // console.log('this is data', data)
   }, [])
 
 

@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { Dialog, Transition } from '@headlessui/react'
 import { auth } from '../../firebase'
 import { addProjectToDB } from '../../../db'
-import { addProject } from './projectSlice'
+import { addProject } from '../../store/projectSlice'
 
 
 const NewProject = () => {

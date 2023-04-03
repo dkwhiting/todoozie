@@ -13,7 +13,6 @@ const NavBar = () => {
 
   useEffect(() => {
     setPath(window.location.href)
-    console.log(path)
   }, [open])
 
   return (

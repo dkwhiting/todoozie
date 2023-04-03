@@ -5,15 +5,12 @@ import { useState } from 'react'
 import useGetDates from '../../useGetDates'
 import DashSidePanel from './DashSidePanel'
 import { useDispatch } from 'react-redux'
-import { toggleTaskStatus } from '../Todos/todoSlice'
+import { toggleTaskStatus } from '../../store/todoSlice'
 
 const Dashboard = () => {
   const tasks = useSelector(state => state.todos.todos)
   const [today, tomorrow] = useGetDates()
   const dispatch = useDispatch()
-
-  console.log(new Date(today))
-
   return (
 
     <div className="flex md:flex-row flex-col w-full h-full">
