@@ -21,27 +21,18 @@ export const registerUser = async ({ email, password }) => {
 }
 
 export const loginUser = async ({ email, password }) => {
-  try {
-    const data = await signInWithEmailAndPassword(auth, email, password)
-    console.log(data)
-    return data.user
-  } catch (error) {
-    console.error(error)
-  }
-
-
-  // await signInWithEmailAndPassword(auth, email, password)
-  //   .then((userCredential) => {
-  //     // Signed in 
-  //     const user = userCredential.user;
-  //     console.log('this is data', user)
-  //     return user
-  //   })
-  //   .catch((error) => {
-  //     const errorCode = error.code;
-  //     const errorMessage = error.message;
-  //     console.error(error)
-  //   });
+  console.log(email, password)
+  await signInWithEmailAndPassword(auth, email, password)
+  .then((userCredential) => {
+    // Signed in 
+    const user = userCredential.user;
+    console.log('this is user ', user)
+  })
+  .catch((error) => {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    // ..
+  });
 }
 
 export const addTodoToDB = (userId, body) => {

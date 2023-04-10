@@ -4,7 +4,7 @@ import { Fragment, useRef, useState } from 'react'
 import { Dialog, Transition } from '@headlessui/react'
 import { auth } from '../firebase'
 import { } from "firebase/auth";
-import { loginUser } from '../../db';
+// import { loginUser } from '../../db';
 import { useLoginUserMutation } from '../store/shopApi';
 import { setUser } from '../store/authSlice';
 
@@ -21,8 +21,9 @@ const Login = () => {
       password: passwordRef.current.value
     }
     const { data: response } = await loginUser(body)
-    // dispatch(setUser({ uid: response.uid }))
-    console.log(response)
+    localStorage.setItem('currentUser', JSON.stringify({ email: response.email, uid: response.uid }))
+    dispatch(setUser({ email: response.email, uid: response.uid }))
+    console.log('this is response',response.uid, response.email)
   }
 
   return (

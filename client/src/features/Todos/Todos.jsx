@@ -1,36 +1,42 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { useSelector } from 'react-redux'
+
 import NewTodo from './NewTodo'
 import SingleTodo from './SingleTodo'
+import Spinner from '../Spinner'
+import { useGetTasksQuery } from '../../store/shopApi'
 
 const Todos = () => {
-  const todos = useSelector((state) => state.todos.todos)
-  const projects = useSelector((state) => state.projects.projects)
-  const [dates, setDates] = useState([])
-  const [view, setView] = useState('project')
+  const currentUser = useSelector(state => state.auth.currentUser)
+  const {
+    data: tasks,
+    isLoading,
+    isSuccess,
+    isError,
+    error
+  } = useGetTasksQuery(currentUser?.uid)
+
+  let content
+
+  if (currentUser) {
+    if (isLoading) {
+    content = <Spinner text="Loading..." />
+  } else if (isSuccess) {
+    content = tasks?.map(todo => <SingleTodo key={todo.id} todo={todo} />)
+  } else if (isError) {
+    content = <div>{error.toString()}</div>
+  }
+  } 
+  
+
 
   return (
     <div className="flex flex-col">
-      <div className="flex">
-        <button onClick={() => setView('project')}>Project View</button>
-        <button onClick={() => setView('date')}>Date View</button>
-      </div>
-
       <div className="flex flex-col">
-
-        {todos?.map((todo, index) => {
-          return (
-            <div key={index} className="flex gap-20">
-              <SingleTodo todo={todo} index={index} />
-            </div>
-          )
-        })
-        }
-
+        {content}
       </div>
       <NewTodo />
     </div>
-
   )
 }
 

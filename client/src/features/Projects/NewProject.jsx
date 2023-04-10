@@ -3,34 +3,32 @@ import { useSelector, useDispatch } from 'react-redux'
 import { Dialog, Transition } from '@headlessui/react'
 import { auth } from '../../firebase'
 import { addProjectToDB } from '../../../db'
-import { addProject } from '../../store/projectSlice'
+import { useAddProjectMutation } from '../../store/shopApi'
 
 
 const NewProject = () => {
   const projects = useSelector((state) => state.projects.projects)
-  const projectOptions = [
-    { id: 0, title: "None" },
-    ...projects
-  ]
+  const currentUser = useSelector((state) => state.auth.currentUser)
 
   const dispatch = useDispatch()
   const [open, setOpen] = useState(false)
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const cancelButtonRef = useRef(null)
+  const [addProject] = useAddProjectMutation()
 
 
   const handleSubmit = (e) => {
     e.preventDefault();
     const body = {
+      userId: currentUser.uid,
       title: title,
       description: description,
-
     }
     if (auth.currentUser) {
-      addProjectToDB(auth.currentUser.uid, body)
+      addProject(body)
     }
-    dispatch(addProject(body))
+    // dispatch(addProject(body))
     setOpen(false)
     setTitle("");
     setDescription("");

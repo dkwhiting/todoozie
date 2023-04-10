@@ -7,21 +7,22 @@ import {
 import { registerUser } from "../../db";
 
 const initialState = {
-  currentUser: null
+  currentUser: JSON.parse(localStorage.getItem('currentUser')) || null
 }
 
 
-export const userSlice = createSlice({
-  name: 'user',
+export const authSlice = createSlice({
+  name: 'auth',
   initialState,
   reducers: {
-    setUser: (state) => {
+    setUser: (state, action) => {
+      console.log('this is payload',action.payload)
       return state = action.payload
     },
     clearUser: () => initialState
   }
 })
 
-export const { setUser, clearUser } = userSlice.actions
+export const { setUser, clearUser } = authSlice.actions
 
-export default userSlice.reducer
+export default authSlice.reducer

@@ -1,15 +1,19 @@
 import React, { useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
-import { NavLink } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { NavLink, useNavigate } from 'react-router-dom'
 import ProjectNav from './ProjectNav'
 import { Icon } from '@iconify/react'
 import NavBarItem from './NavBarItem'
+import { useLogoutUserMutation } from '../../store/shopApi'
+import { clearUser } from '../../store/authSlice'
 
 
 const NavBar = () => {
   const [path, setPath] = useState(window.location.href)
   const [toggleOpen, setToggleOpen] = useState(false)
-  const currentUser = useSelector((state) => state.user.currentUser)
+  const [logout] = useLogoutUserMutation()
+  const dispatch = useDispatch()
+  const navigate = useNavigate()
 
   useEffect(() => {
     setPath(window.location.href)
@@ -22,8 +26,8 @@ const NavBar = () => {
         className="scale(75) w-10 h-9 rotate-0 transition-all duration-500 cursor-pointer relative"
         onClick={() => setToggleOpen(!toggleOpen)}>
         <span className={`block absolute h-0.5 w-3/5 rounded opacity-100 left-2 rotate-0 transition-all duration-250 opacity-100 ${toggleOpen ? 'w-0 top-2 bg-transparent' : ' bg-white top-0'}`}></span>
-        <span className={`block absolute h-0.5 w-3/5 bg-white rounded opacity-100 left-2 rotate-0 transition-all duration-250 top-2 ${toggleOpen ? 'rotate-45' : 'top-2'}`}></span>
-        <span className={`block absolute h-0.5 w-3/5 bg-white rounded opacity-100 left-2 rotate-0 transition-all duration-250 top-2 ${toggleOpen ? '-rotate-45' : 'top-2'}`}></span>
+        <span className={`block absolute h-0.5 w-3/5 bg-white rounded opacity-100 left-2  transition-all duration-250 top-2 ${toggleOpen ? 'rotate-45' : 'top-2'}`}></span>
+        <span className={`block absolute h-0.5 w-3/5 bg-white rounded opacity-100 left-2  transition-all duration-250 top-2 ${toggleOpen ? '-rotate-45' : 'top-2'}`}></span>
         <span className={`block absolute h-0.5 w-3/5 rounded opacity-100 left-2 rotate-0 transition-all duration-250 opacity-100 ${toggleOpen ? 'w-0 top-2 bg-transparent' : 'bg-white top-4'}`}></span>
       </div>
 
@@ -66,6 +70,7 @@ const NavBar = () => {
           icon="material-symbols:logout-rounded"
           path="login"
           toggleOpen={toggleOpen}
+          onClick={()=>handleLogout()}
         />
 
 

@@ -1,30 +1,13 @@
 import { createApi, fakeBaseQuery } from '@reduxjs/toolkit/query/react'
-import { getDatabase, ref, set, get, child, query } from "firebase/database";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
+import { getDatabase, ref, set, get, child, push } from "firebase/database";
+import { signOut, createUserWithEmailAndPassword, signInWithEmailAndPassword } from "firebase/auth";
 import { auth } from '../firebase';
-const userId = auth.currentUser?.uid
 
 export const shopApi = createApi({
   reducerPath: 'shopApi',
   baseQuery: fakeBaseQuery(),
-  tagTypes: ['Users', 'Projects'],
+  tagTypes: ['Users', 'Projects', 'Tasks'],
   endpoints: (builder) => ({
-    getUser: builder.query({
-      async queryFn(uid) {
-        try {
-          const data = await new Promise((resolve, reject) =>
-            onValue(
-              ref(db, `users/user${uid}`),
-              (snapshot) => resolve(snapshot.toJSON()),
-              reject
-            )
-          );
-          return { data };
-        } catch (e) {
-          return { error: e };
-        }
-      },
-    }),
     registerUser: builder.mutation({
       async queryFn(email, password) {
         createUserWithEmailAndPassword(auth, email, password)
@@ -34,66 +17,111 @@ export const shopApi = createApi({
             return { data: user }
           })
           .catch((error) => {
-            const errorCode = error.code;
-            const errorMessage = error.message;
+            return {data: error}
           });
       },
       invalidatesTags: (result, error, { uid }) => ['Users'],
     }),
     loginUser: builder.mutation({
-
       async queryFn({ email, password }) {
         try {
-          console.log('we ARE HERE')
-          console.log(email, password, auth)
           const response = await signInWithEmailAndPassword(auth, email, password)
           return { data: response.user }
         } catch (err) {
           return { error: err }
         }
-
       },
+      invalidatesTags: (result, error, { uid }) => ['Users', 'Projects', 'Tasks'],
+    }),
+    logoutUser: builder.mutation({
+      async queryFn(){
+        signOut(auth).then(() => {
+          return {data: 'You are signed out'}
+        }).catch((error) => {
+          return {data: error}
+        });
+      },
+      invalidatesTags: ['Users', 'Projects', 'Tasks']
     }),
     getProjects: builder.query({
-      async queryFn() {
+      // since we are using fakeBaseQuery we use queryFn
+      async queryFn(userId) {
         try {
-          const db = getDatabase();
-
-          const userId = auth
-          console.log(userId)
-          get(child(db, `users/${userId}`)).then((snapshot) => {
-            if (snapshot.exists()) {
-              console.log(snapshot.val());
-            } else {
-              console.log("No data available");
-            }
+          // posts is the collection name
+          const dbRef = ref(getDatabase());
+          console.log('this is userId',userId)
+          let posts = [];
+          await get(child(dbRef, `projects/${userId}`)).then((snapshot) => {
+            Object.values(snapshot.val()).forEach(project =>{
+              posts.push(project);
           })
+          });
+          return { data: posts };
         } catch (error) {
-          console.error(error);
+          return { error };
         }
       },
-      providesTags: (result) =>
-        // is result available?
-        result
-          ? // successful query
-          [
-            ...result.map(({ id }) => ({ type: 'Projects', id })),
-            { type: 'Projects', id: 'LIST' },
-          ]
-          : // an error occurred, but we still want to refetch this query when `{ type: 'Projects', id: 'LIST' }` is invalidated
-          [{ type: 'Projects', id: 'LIST' }],
+      providesTags: ["Projects"],
     }),
     addProject: builder.mutation({
-      query(body) {
-        return {
-          url: `project`,
-          method: 'POST',
-          body,
+      queryFn(body) {
+        try {
+          const {userId} = body
+          delete body.userId
+          const db = getDatabase()
+          console.log(userId, body)
+          const postListRef = ref(db, `projects/${userId}`);
+          const newPostRef = push(postListRef);
+          const id = newPostRef._path.pieces_[newPostRef._path.pieces_.length - 1]
+          body.id = id
+          set(newPostRef, body);
+          return {data: newPostRef}
+        } catch (error) {
+          console.log(error)
+          return {data: error}
         }
       },
-      // Invalidates all Project-type queries providing the `LIST` id - after all, depending of the sort order,
-      // that newly created project could show up in any lists.
-      invalidatesTags: [{ type: 'Projects', id: 'LIST' }],
+      invalidatesTags: ['Projects'],
+    }),
+    getTasks: builder.query({
+      // since we are using fakeBaseQuery we use queryFn
+      async queryFn(userId) {
+        try {
+          // posts is the collection name
+          const dbRef = ref(getDatabase());
+          console.log('this is userId',userId)
+          let posts = [];
+          await get(child(dbRef, `tasks/${userId}`)).then((snapshot) => {
+            Object.values(snapshot.val()).forEach(project =>{
+              posts.push(project);
+          })
+          });
+          return { data: posts };
+        } catch (error) {
+          return { error };
+        }
+      },
+      providesTags: ["Tasks"],
+    }),
+    addTask: builder.mutation({
+      queryFn(body) {
+        try {
+          const {userId} = body
+          delete body.userId
+          const db = getDatabase()
+          console.log(userId, body)
+          const postListRef = ref(db, `tasks/${userId}`);
+          const newPostRef = push(postListRef);
+          const id = newPostRef._path.pieces_[newPostRef._path.pieces_.length - 1]
+          body.id = id
+          set(newPostRef, body);
+          return {data: newPostRef}
+        } catch (error) {
+          console.log(error)
+          return {data: error}
+        }
+      },
+      invalidatesTags: ['Tasks'],
     }),
   }),
 });
@@ -102,5 +130,8 @@ export const {
   useRegisterUserMutation,
   useLoginUserMutation,
   useGetProjectsQuery,
-  useAddProjectMutation
+  useAddProjectMutation,
+  useGetTasksQuery,
+  useAddTaskMutation,
+  useLogoutUserMutation
 } = shopApi
